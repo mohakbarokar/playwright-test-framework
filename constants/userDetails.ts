@@ -1,13 +1,13 @@
 export const testUserDetails = {
     primary: {
-      name: "Mohak Barokar",
-      gender: "male",
-      email: "mohakbarokar@gmail.com",
-      status: "active"
+        name: "Mohak Barokar",
+        gender: "male",
+        email: "mohakbarokar@testmail.com",
+        status: "active"
     },
     updated: {
-      name: "Mohak Ravindra Barokar",
-      email: "mechcomet@gmail.com",
-      status: "active"
+        name: "Mohak Ravindra Barokar",
+        email: "mechcomet@testmail.com",
+        status: "active"
     }
-  };
+};

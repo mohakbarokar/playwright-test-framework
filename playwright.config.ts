@@ -21,22 +21,22 @@ const config: PlaywrightTestConfig = {
   projects: [
     {
       name: 'Chromium',
-      testDir: './tests/frontend', 
+      testDir: './tests/frontend',
       use: { browserName: 'chromium' },
     },
     {
       name: 'Firefox',
-      testDir: './tests/frontend', 
+      testDir: './tests/frontend',
       use: { browserName: 'firefox' },
     },
     {
       name: 'WebKit',
-      testDir: './tests/frontend', 
+      testDir: './tests/frontend',
       use: { browserName: 'webkit' },
     },
     {
       name: 'API',  // Separate project for API tests
-      testDir: './tests/backend',  
+      testDir: './tests/backend',
       use: {
         // baseURL: 'https://api.yourservice.com',  // Your API's base URL
         // extraHTTPHeaders: {

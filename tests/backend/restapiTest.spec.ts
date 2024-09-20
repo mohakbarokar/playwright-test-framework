@@ -46,18 +46,18 @@ test.describe('API Testing with Playwright', () => {
         console.log(`Response Body: ${JSON.stringify(responseBody, null, 2)}`);
 
         // Validate the response status and body
-        expect(response.status(),`Expected response status 201`).toBe(201);
-         // User creation should return a 201 status code
-        expect(responseBody,`Expected response body to have parameter 'id'`).toHaveProperty('id'); // Check if the ID is present
+        expect(response.status(), `Expected response status 201`).toBe(201);
+        // User creation should return a 201 status code
+        expect(responseBody, `Expected response body to have parameter 'id'`).toHaveProperty('id'); // Check if the ID is present
 
         // Validate that the response contains the expected properties
-        expect(responseBody.name,`Expected response to have Parameter Name as : ${requestBody.name}`).toBe(requestBody.name);
-        expect(responseBody.gender,`Expected response to have Parameter Gender as : ${requestBody.gender}`).toBe(requestBody.gender);
-        expect(responseBody.email,`Expected response to have Parameter email as : ${requestBody.email}`).toBe(requestBody.email);
+        expect(responseBody.name, `Expected response to have Parameter Name as : ${requestBody.name}`).toBe(requestBody.name);
+        expect(responseBody.gender, `Expected response to have Parameter Gender as : ${requestBody.gender}`).toBe(requestBody.gender);
+        expect(responseBody.email, `Expected response to have Parameter email as : ${requestBody.email}`).toBe(requestBody.email);
         expect(responseBody.status, `Expected response to have Parameter status as : ${requestBody.status}`).toBe(requestBody.status);
 
         // Assert that the response time is within an acceptable range
-        expect(duration,`Expected response time to be under : ${apiConstants.expectedResponseTime}` ).toBeLessThan(apiConstants.expectedResponseTime);
+        expect(duration, `Expected response time to be under : ${apiConstants.expectedResponseTime}`).toBeLessThan(apiConstants.expectedResponseTime);
 
         // Store the user ID for use in subsequent tests
         userId = responseBody.id;
@@ -87,9 +87,9 @@ test.describe('API Testing with Playwright', () => {
         console.log(`Response Body: ${JSON.stringify(responseBody, null, 2)}`);
 
         // Validate the response status and body
-        expect(response.status(),`Expected response status 200`).toBe(200); // Check if user is retrieved
-        expect(responseBody,`Expected response body to have parameter 'id' and value is ${userId}`).toHaveProperty('id', userId); // Verify the user ID matches
-        expect(responseBody,`Expected response body to have parameter 'name' and value is ${testUserDetails.primary.name}`).toHaveProperty('name', testUserDetails.primary.name); // Check other properties
+        expect(response.status(), `Expected response status 200`).toBe(200); // Check if user is retrieved
+        expect(responseBody, `Expected response body to have parameter 'id' and value is ${userId}`).toHaveProperty('id', userId); // Verify the user ID matches
+        expect(responseBody, `Expected response body to have parameter 'name' and value is ${testUserDetails.primary.name}`).toHaveProperty('name', testUserDetails.primary.name); // Check other properties
     });
 
     /**
@@ -119,8 +119,8 @@ test.describe('API Testing with Playwright', () => {
         console.log(`Response Body: ${JSON.stringify(responseBody, null, 2)}`);
 
         // Validate the response status and body
-        expect(response.status(),`Expected response status 200`).toBe(200); // Check if the update was successful
-        expect(responseBody,`Expected response body to have parameter 'id' and value is ${userId}`).toHaveProperty('id', userId); // Verify the user ID matches
+        expect(response.status(), `Expected response status 200`).toBe(200); // Check if the update was successful
+        expect(responseBody, `Expected response body to have parameter 'id' and value is ${userId}`).toHaveProperty('id', userId); // Verify the user ID matches
         expect(responseBody, `Expected response body to have parameter 'name' and value is ${testUserDetails.updated.name}`).toHaveProperty('name', testUserDetails.updated.name); // Check updated properties
         expect(responseBody, `Expected response body to have parameter 'email' and value is ${testUserDetails.updated.email}`).toHaveProperty('email', testUserDetails.updated.email); // Check updated properties
     });
@@ -150,11 +150,11 @@ test.describe('API Testing with Playwright', () => {
         console.log(`DELETE Response Status: ${deleteResponse.status()}`);
 
         // Validate the DELETE response status
-        expect(deleteResponse.status(),`Expected response status 204`).toBe(204); // Assuming successful deletion returns a 204 status code
+        expect(deleteResponse.status(), `Expected response status 204`).toBe(204); // Assuming successful deletion returns a 204 status code
 
         // Optionally, check that the user has been deleted by trying to GET the user
         const getResponse = await request.get(deleteRequestURL);
-        expect(getResponse.status(),`Expected response status 404 on recheck`).toBe(404); // The user should not be found
+        expect(getResponse.status(), `Expected response status 404 on recheck`).toBe(404); // The user should not be found
         console.log(`DELETE Response Status after Rerun: ${getResponse.status()}`);
     });
 
