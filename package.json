@@ -1,0 +1,20 @@
+{
+  "name": "playwright-test-framework",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test:frontend": "npx playwright test tests/frontend/",
+    "report:generate": "npx allure generate allure-results --clean",
+    "report:open": "npx allure open",
+    "report:allure": "npm run report:generate && npm run report:open"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@playwright/test": "^1.47.1",
+    "@types/node": "^22.5.5",
+    "allure-playwright": "^3.0.0"
+  }
+}
