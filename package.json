@@ -3,7 +3,13 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test:frontend": "npx playwright test tests/frontend/",
+    "test:frontend": "npx playwright test --project=Chromium --project=Firefox --project=WebKit",
+    "test:frontend:parallel": "npx playwright test --project=Chromium --project=Firefox --project=WebKit --workers=4",
+    "test:frontend:chrome": "npx playwright test --project=Chromium",
+    "test:frontend:firefox": "npx playwright test --project=Firefox",
+    "test:frontend:webkit": "npx playwright test --project=WebKit",
+    "test:backend": "npx playwright test --project=API",
+    "test:all": "npx playwright test",
     "report:generate": "npx allure generate allure-results --clean",
     "report:open": "npx allure open",
     "report:allure": "npm run report:generate && npm run report:open"
