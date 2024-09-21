@@ -14,28 +14,35 @@ test.describe('Home Page Verification', () => {
     // Create an instance of the HomePage class
     const homePage = new HomePage(page);
 
-    // Navigate to the home page
-    await homePage.navigateToHomePage();
+    await test.step('Navigate to Home Page', async () => {
+      await homePage.navigateToHomePage();
+    });
 
-    // Verify Page Title
-    await homePage.verifyHomePageTitle();
+    await test.step('Verify Page Title', async () => {
+      await homePage.verifyHomePageTitle();
+    });
 
-    // Check if EULA Dialog is displayed and Verify components
-    await homePage.handleEULADialog();
+    await test.step('Check EULA Dialog', async () => {
+      await homePage.handleEULADialog();
+    });
 
-    // Verify highlighted models displayed on Home Page
-    await homePage.verifyDisplayedModels();
+    await test.step('Verify highlighted models displayed on Home Page', async () => {
+      await homePage.verifyDisplayedModels();
+    });
 
-    //Verifying the presence of Polestar Upptäck(discover) buttons for each car model.
-    const modelNumbers = Object.values(HOME_PAGE_CONSTANTS.POLESTAR_CAR_MODEL_NUMBERS);
-    for (const number of modelNumbers) {
-      await homePage.verifyPolestarDiscoverButton(number);
-    }
+    await test.step('Verify Polestar Discover buttons for each car model', async () => {
+      const modelNumbers = Object.values(HOME_PAGE_CONSTANTS.POLESTAR_CAR_MODEL_NUMBERS);
+      for (const number of modelNumbers) {
+        await homePage.verifyPolestarDiscoverButton(number);
+      }
+    });
 
-    //Verifying icons in Navigation Bar
-    await homePage.verifyNavigationMenuIconsVisibility(homePageLocators.NAVIGATION_ICONS);
-    
-     //Verifying buttons and their text in Navigation Bar
-     await homePage.verifyNavigationMenuButtonsVisibility(homePageLocators.NAVIGATION_BUTTONS);
+    await test.step('Verify icons in Navigation Bar', async () => {
+      await homePage.verifyNavigationMenuIconsVisibility(homePageLocators.NAVIGATION_ICONS);
+    });
+
+    await test.step('Verify buttons and their text in Navigation Bar', async () => {
+      await homePage.verifyNavigationMenuButtonsVisibility(homePageLocators.NAVIGATION_BUTTONS);
+    });
   });
 });
