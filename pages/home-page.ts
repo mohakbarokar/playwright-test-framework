@@ -35,7 +35,7 @@ export class HomePage {
      * This method uses the base URL defined in the URL constants to navigate to the home page.
      */
     async navigateToHomePage() {
-        await this.page.goto(URL.PORTAL_BASE_URL);
+        await this.page.goto(URL.PORTAL_BASE_URL, { waitUntil: 'networkidle' });
     }
 
     /**
@@ -190,5 +190,5 @@ export class HomePage {
             expect(actualText?.trim(), `Checking if button text is displayed as ${buttonText}`).toBe(buttonText);
         }
     }
-    
+
 }
