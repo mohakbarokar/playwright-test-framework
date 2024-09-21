@@ -178,17 +178,6 @@ export class HomePage {
      * This method iterates through the provided IDs, checks if each navigation button is visible on the page,
      * and asserts their visibility and text content using Playwright's 'expect' function.
      */
-    // async verifyNavigationMenuButtonsVisibility(buttons: Record<string, string>) {
-    //     for (const [key, buttonText] of Object.entries(buttons)) {
-    //         // Get the dynamic locator using button text
-    //         const locator = this.page.locator(genericLocators.BUTTON_WITH_TEXT(buttonText));
-    //         // Wait for the button to be visible
-    //         await expect(locator, `Checking if ${buttonText} button is visible in Navigation menu`).toBeVisible();
-
-    //         // Check if the button contains the correct text
-    //         expect(locator.textContent(), `Checking if button text is displayed as ${buttonText}`).toBe(buttonText);
-    //     }
-    // }
     async verifyNavigationMenuButtonsVisibility(buttons: Record<string, string>) {
         for (const [key, buttonText] of Object.entries(buttons)) {
             // Get the dynamic locator using button text
