@@ -6,7 +6,7 @@
  * 
  * Dependencies:
  * - Playwright test framework for handling page interactions.
- * - Locators for specific elements on the home page.
+ * - Locators for specific elements on the home page or generic formed locators.
  * - URL constants for base navigation.
  * - Home page constants for expected values and titles.
  */
@@ -15,7 +15,6 @@ import { Page, expect } from '@playwright/test';
 import { homePageLocators } from '../locators/home-page-locators'; // Importing locators for home page elements
 import { URL } from '../constants/urls'; // Importing constants for URLs
 import { HOME_PAGE_CONSTANTS } from '../constants/home-page-constants'; // Importing constants for home page verification
-import { replaceUnderscoresWithSpaces } from '../utils/string-utils';
 import { genericLocators } from '../locators/generic-locators';
 
 export class HomePage {
@@ -191,5 +190,5 @@ export class HomePage {
             expect(actualText?.trim(), `Checking if button text is displayed as ${buttonText}`).toBe(buttonText);
         }
     }
-
+    
 }
