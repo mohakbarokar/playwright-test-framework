@@ -11,7 +11,7 @@ const config: PlaywrightTestConfig = {
   ],
   use: {
     headless: false,
-    baseURL: 'https://www.polestar.com/se',
+    // baseURL: 'https://www.polestar.com/se',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
   },
