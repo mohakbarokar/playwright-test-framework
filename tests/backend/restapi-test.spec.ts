@@ -33,9 +33,9 @@ test.describe('API Testing with Playwright', () => {
             });
 
             console.log(`DELETE Response Status: ${deleteResponse.status()}`);
-            
+
             // Expect a 204 No Content response
-            expect(deleteResponse.status(),`Deletion Successful and status 204`).toBe(204);
+            expect(deleteResponse.status(), `Deletion Successful and status 204`).toBe(204);
         } else {
             console.log('No existing user found with the specified email.');
         }
@@ -136,7 +136,8 @@ test.describe('API Testing with Playwright', () => {
         const requestURL = URL.API_BASE_URL + endpoint;
         const headers = API_CONSTANTS.HEADERS;
 
-        const requestBody = TEST_USER_DETAILS.updated; // Define updated user details
+        // Define updated user details
+        const requestBody = TEST_USER_DETAILS.updated;
 
         // Logging Request details
         console.log(`Request: PUT ${requestURL}`);
@@ -188,6 +189,47 @@ test.describe('API Testing with Playwright', () => {
         const getResponse = await request.get(deleteRequestURL);
         expect(getResponse.status(), `Expected response status 404 on recheck`).toBe(404); // The user should not be found
         console.log(`DELETE Response Status after Rerun: ${getResponse.status()}`);
+    });
+
+    /**
+     * Negative Test case for POST /public/v2/users with invalid data.
+     * Should return 422 for missing required fields.
+     */
+    test('Negative Test : POST /public/v2/users should return 422 for missing required fields', async ({ request }) => {
+        const endpoint = '/public/v2/users';
+        const requestURL = URL.API_BASE_URL + endpoint;
+
+        // Prepare the request body with missing required fields
+        const requestBody = TEST_USER_DETAILS.invalidMissingName
+
+        // Set the request headers
+        const headers = API_CONSTANTS.HEADERS;
+
+        // Logging Request details
+        console.log(`Request: POST ${requestURL}`);
+        console.log(`Request Headers: ${JSON.stringify(headers, null, 2)}`);
+        console.log(`Request Body: ${JSON.stringify(requestBody, null, 2)}`);
+
+        // Make the POST request
+        const response = await request.post(requestURL, {
+            headers: headers,
+            data: requestBody
+        });
+
+        // Log the response details
+        console.log(`Response Status: ${response.status()}`);
+        const responseBody = await response.json();
+        console.log(`Response Body: ${JSON.stringify(responseBody, null, 2)}`);
+
+        // Validate the response status and response body
+        expect(response.status(), `Expected response status 422`).toBe(422); // Check if 422 status is returned for missing fields
+        // Validate specific error message for the expected field using constants
+        expect(responseBody, `Expected response to have field and message and verifying values`).toEqual(expect.arrayContaining([
+            expect.objectContaining({
+                field: API_CONSTANTS.EXPECTED_INVALID_FIELD_NAME,
+                message: API_CONSTANTS.EXPECTED_ERROR_MESSAGE_BLANK
+            })
+        ]));
     });
 
     /**

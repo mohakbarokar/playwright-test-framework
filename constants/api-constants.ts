@@ -6,4 +6,6 @@ export const API_CONSTANTS = {
     },
     EXPECTED_RESPONSE_TIME: 2000,
     USER_CREATION_WAIT_TIME: 3000,
+    EXPECTED_INVALID_FIELD_NAME: 'name',
+    EXPECTED_ERROR_MESSAGE_BLANK: 'can\'t be blank',
 };
