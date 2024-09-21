@@ -2,7 +2,7 @@ import { PlaywrightTestConfig } from '@playwright/test';
 
 const config: PlaywrightTestConfig = {
   testDir: './tests',
-  retries: 0,
+  retries: process.env.CI ? 2 : 0,  // Enable retries in CI environments
   reporter: [
     ['list'],  // Terminal list reporter
     ['html', { outputFolder: 'html-report', open: 'never' }],  // HTML report
@@ -10,8 +10,7 @@ const config: PlaywrightTestConfig = {
     ['junit', { outputFile: 'test-results/results.xml' }] // JUnit report
   ],
   use: {
-    headless: false,
-    // baseURL: 'https://www.polestar.com/se',
+    headless: process.env.CI ? true : false,  // Headless true in CI, false locally
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
   },
@@ -37,17 +36,12 @@ const config: PlaywrightTestConfig = {
     {
       name: 'API',  // Separate project for API tests
       testDir: './tests/backend',
-      use: {
-        // baseURL: 'https://api.yourservice.com',  // Your API's base URL
-        // extraHTTPHeaders: {
-        //   'Authorization': `Bearer YOUR_API_TOKEN`,  // Add API-specific headers
-        // },
-      },
+      use: {},
     }
   ],
 
   // Optional workers setup for parallel execution
-  // workers: 4,
+  workers: process.env.CI ? 4 : undefined,  // Use 4 workers in CI, undefined locally
 };
 
 export default config;
