@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
-import { URL } from "../../constants/URLs";
-import { apiConstants } from "../../constants/apiConstants";
-import { graphqlQueries } from '../../constants/graphQlQueries';
+import { URL } from "../../constants/urls";
+import { API_CONSTANTS } from "../../constants/api-constants";
+import { GRAPHQL_QUERIES } from '../../constants/graphql-queries';
 
 /**
  * Test suite for GraphQL API Testing using Playwright.
@@ -22,11 +22,11 @@ test.describe('GraphQL API Testing with Playwright', () => {
 
         // GraphQL query to fetch users' data with pagination and node details
         const graphqlQuery = {
-            query: graphqlQueries.getUsersQuery
+            query: GRAPHQL_QUERIES.GET_USERS_QUERY
         };
 
         // Set the request headers with authorization and content type
-        const headers = apiConstants.headers
+        const headers = API_CONSTANTS.HEADERS
 
         // Log GraphQL Request details for debugging purposes
         console.log(`Request: POST ${requestURL}`);

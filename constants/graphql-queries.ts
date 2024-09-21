@@ -1,5 +1,5 @@
-export const graphqlQueries = {
-    getUsersQuery: `query {
+export const GRAPHQL_QUERIES = {
+    GET_USERS_QUERY: `query {
       users {
         pageInfo {
           endCursor

@@ -1,13 +1,45 @@
 import { test, expect } from '@playwright/test';
-import { URL } from "../../constants/URLs";
-import { testUserDetails } from "../../constants/userDetails";
-import { apiConstants } from "../../constants/apiConstants";
+import { URL } from '../../constants/urls';
+import { TEST_USER_DETAILS } from "../../constants/user-details";
+import { API_CONSTANTS } from "../../constants/api-constants";
 
 /**
  * API Testing with Playwright for REST API's
  */
 test.describe('API Testing with Playwright', () => {
     let userId: number; // Variable to store the user ID
+
+    /**
+     * Pre requisite Test case to cleanup data if previous execution failed and residue data is left in system.
+     * GET /public/v2/users & DELETE
+     */
+    test.beforeAll(`GET & DELETE /public/v2/users?email=${TEST_USER_DETAILS.primary.email} should delete user if existed`, async ({ request }) => {
+        // Check if a user with the specified email already exists
+        const getUserResponse = await request.get(`${URL.API_BASE_URL}/public/v2/users?email=${encodeURIComponent(TEST_USER_DETAILS.primary.email)}`, {
+            headers: API_CONSTANTS.HEADERS,
+        });
+
+        // Log the response details
+        console.log(`GET Response Status: ${getUserResponse.status()}`);
+        const responseBody = await getUserResponse.json();
+
+        // If user exists, delete the user
+        if (responseBody && responseBody.length > 0) {
+            userId = responseBody[0].id; // Get the user Id
+            console.log(`User found with ID: ${userId}, deleting...`);
+
+            const deleteResponse = await request.delete(`${URL.API_BASE_URL}/public/v2/users/${userId}`, {
+                headers: API_CONSTANTS.HEADERS,
+            });
+
+            console.log(`DELETE Response Status: ${deleteResponse.status()}`);
+            
+            // Expect a 204 No Content response
+            expect(deleteResponse.status(),`Deletion Successful and status 204`).toBe(204);
+        } else {
+            console.log('No existing user found with the specified email.');
+        }
+    });
 
     /**
      * Test case to create a new user.
@@ -18,10 +50,10 @@ test.describe('API Testing with Playwright', () => {
         const requestURL = URL.API_BASE_URL + endpoint;
 
         // Prepare the request body
-        const requestBody = testUserDetails.primary;
+        const requestBody = TEST_USER_DETAILS.primary;
 
         // Set the request headers
-        const headers = apiConstants.headers;
+        const headers = API_CONSTANTS.HEADERS;
 
         // Logging Request details
         console.log(`Request: POST ${requestURL}`);
@@ -57,7 +89,7 @@ test.describe('API Testing with Playwright', () => {
         expect(responseBody.status, `Expected response to have Parameter status as : ${requestBody.status}`).toBe(requestBody.status);
 
         // Assert that the response time is within an acceptable range
-        expect(duration, `Expected response time to be under : ${apiConstants.expectedResponseTime}`).toBeLessThan(apiConstants.expectedResponseTime);
+        expect(duration, `Expected response time to be under : ${API_CONSTANTS.EXPECTED_RESPONSE_TIME}`).toBeLessThan(API_CONSTANTS.EXPECTED_RESPONSE_TIME);
 
         // Store the user ID for use in subsequent tests
         userId = responseBody.id;
@@ -68,12 +100,12 @@ test.describe('API Testing with Playwright', () => {
      * GET /public/v2/users/{userId}
      */
     test('GET /public/v2/users/{userId} should retrieve the user', async ({ request }) => {
-        await wait(2000); // Wait for a short duration to ensure the POST request has completed
+        await wait(API_CONSTANTS.USER_CREATION_WAIT_TIME); // Wait for a short duration to ensure the POST request has completed
         expect(userId).toBeDefined(); // Ensure userId is set
 
         const endpoint = `/public/v2/users/${userId}`;
         const requestURL = URL.API_BASE_URL + endpoint;
-        const headers = apiConstants.headers;
+        const headers = API_CONSTANTS.HEADERS;
 
         // Logging Request details
         console.log(`Request: GET ${requestURL}`);
@@ -89,7 +121,7 @@ test.describe('API Testing with Playwright', () => {
         // Validate the response status and body
         expect(response.status(), `Expected response status 200`).toBe(200); // Check if user is retrieved
         expect(responseBody, `Expected response body to have parameter 'id' and value is ${userId}`).toHaveProperty('id', userId); // Verify the user ID matches
-        expect(responseBody, `Expected response body to have parameter 'name' and value is ${testUserDetails.primary.name}`).toHaveProperty('name', testUserDetails.primary.name); // Check other properties
+        expect(responseBody, `Expected response body to have parameter 'name' and value is ${TEST_USER_DETAILS.primary.name}`).toHaveProperty('name', TEST_USER_DETAILS.primary.name); // Check other properties
     });
 
     /**
@@ -97,14 +129,14 @@ test.describe('API Testing with Playwright', () => {
      * PUT /public/v2/users/{userId}
      */
     test('PUT /public/v2/users/{userId} should update the user', async ({ request }) => {
-        await wait(2000); // Wait for a short duration to ensure the POST request has completed
+        await wait(API_CONSTANTS.USER_CREATION_WAIT_TIME); // Wait for a short duration to ensure the POST request has completed
         expect(userId).toBeDefined(); // Ensure userId is set
 
         const endpoint = `/public/v2/users/${userId}`;
         const requestURL = URL.API_BASE_URL + endpoint;
-        const headers = apiConstants.headers;
+        const headers = API_CONSTANTS.HEADERS;
 
-        const requestBody = testUserDetails.updated; // Define updated user details
+        const requestBody = TEST_USER_DETAILS.updated; // Define updated user details
 
         // Logging Request details
         console.log(`Request: PUT ${requestURL}`);
@@ -121,8 +153,8 @@ test.describe('API Testing with Playwright', () => {
         // Validate the response status and body
         expect(response.status(), `Expected response status 200`).toBe(200); // Check if the update was successful
         expect(responseBody, `Expected response body to have parameter 'id' and value is ${userId}`).toHaveProperty('id', userId); // Verify the user ID matches
-        expect(responseBody, `Expected response body to have parameter 'name' and value is ${testUserDetails.updated.name}`).toHaveProperty('name', testUserDetails.updated.name); // Check updated properties
-        expect(responseBody, `Expected response body to have parameter 'email' and value is ${testUserDetails.updated.email}`).toHaveProperty('email', testUserDetails.updated.email); // Check updated properties
+        expect(responseBody, `Expected response body to have parameter 'name' and value is ${TEST_USER_DETAILS.updated.name}`).toHaveProperty('name', TEST_USER_DETAILS.updated.name); // Check updated properties
+        expect(responseBody, `Expected response body to have parameter 'email' and value is ${TEST_USER_DETAILS.updated.email}`).toHaveProperty('email', TEST_USER_DETAILS.updated.email); // Check updated properties
     });
 
     /**
@@ -130,14 +162,14 @@ test.describe('API Testing with Playwright', () => {
      * DELETE /public/v2/users/{userId}
      */
     test('DELETE /public/v2/users/{userId} should delete a user', async ({ request }) => {
-        await wait(2000); // Wait for a short duration to ensure the POST request has completed
+        await wait(API_CONSTANTS.USER_CREATION_WAIT_TIME); // Wait for a short duration to ensure the POST request has completed
         expect(userId).toBeDefined(); // Ensure the userId has been set from the previous tests
 
         const endpoint = `/public/v2/users/${userId}`;
         const deleteRequestURL = URL.API_BASE_URL + endpoint;
 
         // Set the request headers
-        const headers = apiConstants.headers;
+        const headers = API_CONSTANTS.HEADERS;
 
         // Logging DELETE Request details
         console.log(`Request: DELETE ${deleteRequestURL}`);
