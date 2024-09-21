@@ -4,12 +4,14 @@
   "main": "index.js",
   "scripts": {
     "test:frontend": "npx playwright test --project=Chromium --project=Firefox --project=WebKit",
-    "test:frontend:parallel": "npx playwright test --project=Chromium --project=Firefox --project=WebKit --workers=4",
+    "test:frontend:parallel": "npx playwright test --project=Chromium --project=Firefox --project=WebKit --workers=50%",
     "test:frontend:chrome": "npx playwright test --project=Chromium",
     "test:frontend:firefox": "npx playwright test --project=Firefox",
     "test:frontend:webkit": "npx playwright test --project=WebKit",
     "test:backend": "npx playwright test --project=API",
+    "test:backend:parallel": "npx playwright test --project=API --workers=50%",
     "test:all": "npx playwright test",
+    "test:all:parallel": "npx playwright test --workers=50%",
     "report:generate": "npx allure generate allure-results --clean",
     "report:open": "npx allure open",
     "report:allure": "npm run report:generate && npm run report:open"
