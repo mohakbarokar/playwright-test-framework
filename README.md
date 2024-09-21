@@ -1,4 +1,3 @@
-```markdown
 # Playwright Test Automation Framework
 
 ## Overview
