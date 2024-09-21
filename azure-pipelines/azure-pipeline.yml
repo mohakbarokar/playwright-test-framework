@@ -1,0 +1,34 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '22.9.0'
+  displayName: 'Install Node.js'
+
+- script: |
+    npm install
+  displayName: 'Install Project Dependencies'
+
+- script: |
+    npm install -g allure-commandline
+  displayName: 'Install Allure Command Line Tool'
+
+- script: |
+    npx playwright install
+  displayName: 'Install Playwright Browsers'
+
+- script: |
+    npm run test:all
+  displayName: 'Run All Tests'
+
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'JUnit'
+    testResultsFiles: 'test-results/*.xml'  # Adjusted to reflect the source level
+    failIfNoResults: true
+  displayName: 'Publish Test Results'
