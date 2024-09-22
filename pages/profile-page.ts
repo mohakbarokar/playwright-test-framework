@@ -12,6 +12,7 @@ import { profilePageLocators } from '../locators/profile-page-locators';
  */
 export class ProfilePage {
     private page: Page;
+    private commonPage: CommonPage;
 
     /**
      * Constructor to initialize the LoginPage instance.
@@ -19,6 +20,7 @@ export class ProfilePage {
      */
     constructor(page: Page) {
         this.page = page;
+        this.commonPage = new CommonPage(page);
     }
 
     /**
@@ -69,5 +71,51 @@ export class ProfilePage {
         await locator.click();
 
         console.log('Clicked on Design and Order link for Polestar 4');
+    }
+
+    /**
+     * Cleans up by deleting all cars displayed using the three dots menu option.
+     * This method handles multiple instances of the three dots option, confirming 
+     * deletion for each car in sequence.
+     *
+     * @returns {Promise<void>} A promise that resolves when all cars have been deleted.
+     */
+    async cleanupCars(): Promise<void> {
+        // Locate all three dots options and wait for them to be visible
+        console.log('Trying to delete cars displayed in configurations.')
+        let threeDotsOptions = this.page.locator(profilePageLocators.THREE_DOTS_OPTION_BTN_XPATH);
+        let count = await threeDotsOptions.count();
+
+        console.log(`Found ${count} cars to delete.`);
+
+        for (let i = 0; i < count; i++) {
+            // Click on the three dots option for the current car
+            await threeDotsOptions.nth(i).click();
+
+            // Wait for the delete option to be visible and click it
+            const deleteCarOption = this.page.locator(profilePageLocators.DELETE_CAR_OPTION_BTN_XPATH);
+            await deleteCarOption.click();
+
+            // Wait for the confirmation dialog to be visible
+            const confirmationDialog = this.page.getByText(profilePageLocators.DELETE_CONFIGURATION_TEXT);
+            await confirmationDialog.waitFor({ state: 'visible' });
+
+            // Click on the delete button in the confirmation dialog
+            const deleteButton = this.page.locator(genericLocators.BUTTON_WITH_TEXT(profilePageLocators.DELETE_BTN_TEXT));
+            await deleteButton.click();
+
+            // Optional: Wait for a short duration to ensure the deletion is processed
+            await this.page.waitForTimeout(PROFILE_PAGE_CONSTANTS.CAR_CLEANUP_TIMEOUT);
+
+            // Refresh the page and wait for it to load
+            await this.page.reload();
+            await this.commonPage.waitForPageToLoad(genericLocators.ELEMENT_WITH_TEXT(profilePageLocators.PROFILE_NAME_ELEMENT_TYPE, PORTAL_USER_DETAILS.correct.name), PROFILE_PAGE_CONSTANTS.PROFILE_PAGE_TITLE, PROFILE_PAGE_CONSTANTS.PROFILE_PAGE_LOAD_TIMEOUT);
+            
+            // Re-locate the three dots options in case the list has changed
+            threeDotsOptions = this.page.locator(profilePageLocators.THREE_DOTS_OPTION_BTN_XPATH);
+            count = await threeDotsOptions.count();
+        }
+
+        console.log('Delete Action Performed.');
     }
 }

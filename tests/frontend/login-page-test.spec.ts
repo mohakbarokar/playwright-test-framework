@@ -10,8 +10,8 @@ import { loginPageLocators } from '../../locators/login-page-locators';
 /**
  * Test suite for verifying Login Flow.
  * 
- * This test suite navigates to the login page
- * 
+ * This test suite navigates to the login page and verifies login flow
+ * Invalid credentials and Inocorrect mail id format
  */
 test.describe('Login Page Verification', () => {
     test('Navigate to Login Page and verify login flow', async ({ page }) => {

@@ -7,6 +7,7 @@ import { genericLocators } from '../locators/generic-locators';
 import { PROFILE_PAGE_CONSTANTS } from '../constants/profile-page-constants';
 import { profilePageLocators } from '../locators/profile-page-locators';
 import { configuratorPageLocators } from '../locators/configurator-page-locators';
+import { CONFIGURATOR_PAGE_CONSTANTS } from '../constants/configurator-page-constants';
 
 /**
  * ConfiguratorPage class provides utility methods for all Configurator and Checkout page interactions and verifications.
@@ -81,7 +82,7 @@ export class ConfiguratorPage {
         console.log('Waiting for Your Order page to load...');
 
         // Wait for the "Your Order" page to load
-        await this.commonPage.waitForPageToLoad(configuratorPageLocators.ORDER_CHECKOUT_XPATH);
+        await this.commonPage.waitForPageToLoad(configuratorPageLocators.ORDER_CHECKOUT_XPATH, undefined, CONFIGURATOR_PAGE_CONSTANTS.CONFIGURATOR_PAGE_LOAD_TIMEOUT);
 
         // Click on the "Submit Customer Details" button
         const submitCustomerDetailsBtn = this.page.getByTestId(configuratorPageLocators.SUBMIT_CUSTOMER_DETAILS_BTN_DATA_TEST_ID);
@@ -120,7 +121,7 @@ export class ConfiguratorPage {
 
         // Wait for the "Confirm Payment" button with the text 'Bekräfta' to be visible
         console.log('Waiting for the Confirm Payment button to be visible...');
-        
+
         // Get the dynamic locator using button text
         const locator = this.page.locator(genericLocators.BUTTON_WITH_TEXT(configuratorPageLocators.CONFIRM_PAYMENT_BTN_TEXT));
 

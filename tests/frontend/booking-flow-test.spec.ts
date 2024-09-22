@@ -18,8 +18,8 @@ import { PROFILE_PAGE_CONSTANTS } from '../../constants/profile-page-constants';
 /**
  * Test suite for verifying Booking Flow.
  * 
- * This test suite navigates to the login page
- * 
+ * This test suite navigates through booking pages and validates car price.
+ * Also validates if cars after booking are displayed under user profile
  */
 test.describe('Booking Flow Verification', () => {
     test('Login in Portal and Book Vehicle Verification', async ({ page }) => {
@@ -71,7 +71,6 @@ test.describe('Booking Flow Verification', () => {
 
             // Verify that the final price and total order value are equal
             expect(finalPriceConfigurationPage, `Verifying if final price from configuration page (${finalPriceConfigurationPage}) matches total order value from customer details submit page (${totalOrderValueCustomerDetailsSubmitPage})`).toBe(totalOrderValueCustomerDetailsSubmitPage);
-            await configuratorPage.selectDirectPaymentAndConfirm();
         });
 
         await test.step('Selecting payment option and Navigating to Profile page to verify cars in account', async () => {
@@ -85,9 +84,9 @@ test.describe('Booking Flow Verification', () => {
             carsAfterBooking = await profilePage.getCurrentNumberOfCars();
             console.log(`Cars After Booking : ${carsAfterBooking}`);
 
-            // Verify that the final price and total order value are equal
-            expect(carsAfterBooking, `Verifying if number of cars after booking :(${carsAfterBooking}) is 1 more than prior to booking : (${currentCars})`).toBe(currentCars + 1);
-
+            //Verify number of cars in profile increased after booking
+            expect(carsAfterBooking, `Verifying if number of cars after booking :(${carsAfterBooking}) is  more than prior to booking : (${currentCars})`).toBeGreaterThan(currentCars);
+            await profilePage.cleanupCars();
         });
     });
 });

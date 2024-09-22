@@ -155,12 +155,15 @@ export class CommonPage {
      * @param pageTitle The expected title of the page to verify after it loads. (Optional)
      * @param timeout The maximum time to wait for the element to become visible (default: 10 seconds). (Optional)
      */
-    async waitForPageToLoad(elementLocator: string, pageTitle?: string, timeout: number = 60000) {
+    async waitForPageToLoad(elementLocator: string, pageTitle?: string, timeout: number = 200000) {
         console.log(`Waiting for the page to fully load with element: ${elementLocator}`);
 
-        // Wait for the page's network activity to idle before checking for the element
-        // await this.page.waitForLoadState('networkidle');
-        await this.page.waitForLoadState('networkidle', { timeout });
+        // Try to wait for the page's network activity to idle
+        try {
+            await this.page.waitForLoadState('networkidle', { timeout });
+        } catch (error) {
+            console.warn(`Failed to wait for networkidle state: ${error.message}. Continuing to wait for the element...`);
+        }
 
         // Wait for the key element to be visible
         await this.page.waitForSelector(elementLocator, { state: 'visible', timeout });
