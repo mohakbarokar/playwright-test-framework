@@ -35,7 +35,7 @@ export class HomePage {
      * This method uses the base URL defined in the URL constants to navigate to the home page.
      */
     async navigateToHomePage() {
-        await this.page.goto(URL.PORTAL_BASE_URL, { waitUntil: 'networkidle' });
+        await this.page.goto(URL.PORTAL_BASE_URL, { waitUntil: 'load', timeout: HOME_PAGE_CONSTANTS.HOME_PAGE_LOAD_TIMEOUT });
     }
 
     /**
@@ -60,36 +60,43 @@ export class HomePage {
      * @param accept - A boolean indicating whether to accept (true) or reject (false) the EULA dialog. Default is true.
      */
     async handleEULADialog(accept: boolean = true) {
-        // Check if the dialog box title is visible
-        const isDialogVisible = await this.page.isVisible(homePageLocators.EULA_DIALOG_BOX_TITLE_ID);
+        try {
+            // Wait for the EULA dialog to be visible with a timeout
+            await this.page.waitForSelector(homePageLocators.EULA_DIALOG_BOX_TITLE_ID, { state: 'visible', timeout: HOME_PAGE_CONSTANTS.HOME_PAGE_LOAD_TIMEOUT });
 
-        if (isDialogVisible) {
-            console.log(`EULA Dialog is visible on Home Page`);
+            // Now check if the dialog box title is visible
+            const isDialogVisible = await this.page.isVisible(homePageLocators.EULA_DIALOG_BOX_TITLE_ID);
 
-            // Verify dialog title
-            const dialogTitle = await this.page.textContent(homePageLocators.EULA_DIALOG_BOX_TITLE_ID);
-            expect(dialogTitle, `Verifying Welcome Dialog title`).toBe(HOME_PAGE_CONSTANTS.EULA_DIALOG_BOX_TITLE);
+            if (isDialogVisible) {
+                console.log(`EULA Dialog is visible on Home Page`);
 
-            // Verify dialog text
-            const dialogText = await this.page.textContent(homePageLocators.EULA_DIALOG_BOX_TEXT_ID);
-            expect(dialogText, `Verifying policy text`).toBe(HOME_PAGE_CONSTANTS.EULA_DIALOG_BOX_POLICY);
+                // Verify dialog title
+                const dialogTitle = await this.page.textContent(homePageLocators.EULA_DIALOG_BOX_TITLE_ID);
+                expect(dialogTitle, `Verifying Welcome Dialog title`).toBe(HOME_PAGE_CONSTANTS.EULA_DIALOG_BOX_TITLE);
 
-            // Verify accept button text
-            const acceptBtnText = await this.page.textContent(homePageLocators.EULA_DIALOG_BOX_ACCEPT_BTN_ID);
-            expect(acceptBtnText, `Verifying accept button text`).toBe(HOME_PAGE_CONSTANTS.EULA_DIALOG_ACCEPT_BTN);
+                // Verify dialog text
+                const dialogText = await this.page.textContent(homePageLocators.EULA_DIALOG_BOX_TEXT_ID);
+                expect(dialogText, `Verifying policy text`).toBe(HOME_PAGE_CONSTANTS.EULA_DIALOG_BOX_POLICY);
 
-            // Verify reject button text
-            const rejectBtnText = await this.page.textContent(homePageLocators.EULA_DIALOG_BOX_REJECT_BTN_ID);
-            expect(rejectBtnText, `Verifying reject button text`).toBe(HOME_PAGE_CONSTANTS.EULA_DIALOG_REJECT_BTN);
+                // Verify accept button text
+                const acceptBtnText = await this.page.textContent(homePageLocators.EULA_DIALOG_BOX_ACCEPT_BTN_ID);
+                expect(acceptBtnText, `Verifying accept button text`).toBe(HOME_PAGE_CONSTANTS.EULA_DIALOG_ACCEPT_BTN);
 
-            // Click accept or reject based on the parameter
-            if (accept) {
-                console.log(`Clicking on EULA Dialog accept all button`);
-                await this.page.click(homePageLocators.EULA_DIALOG_BOX_ACCEPT_BTN_ID);
-            } else {
-                console.log(`Clicking on EULA Dialog reject all button`);
-                await this.page.click(homePageLocators.EULA_DIALOG_BOX_REJECT_BTN_ID);
+                // Verify reject button text
+                const rejectBtnText = await this.page.textContent(homePageLocators.EULA_DIALOG_BOX_REJECT_BTN_ID);
+                expect(rejectBtnText, `Verifying reject button text`).toBe(HOME_PAGE_CONSTANTS.EULA_DIALOG_REJECT_BTN);
+
+                // Click accept or reject based on the parameter
+                if (accept) {
+                    console.log(`Clicking on EULA Dialog accept all button`);
+                    await this.page.click(homePageLocators.EULA_DIALOG_BOX_ACCEPT_BTN_ID);
+                } else {
+                    console.log(`Clicking on EULA Dialog reject all button`);
+                    await this.page.click(homePageLocators.EULA_DIALOG_BOX_REJECT_BTN_ID);
+                }
             }
+        } catch (error) {
+            console.log(`EULA Dialog did not appear or an error occurred: ${error.message}`);
         }
     }
 

@@ -17,10 +17,10 @@ const config: PlaywrightTestConfig = {
   outputDir: 'test-results/',
 
   // Default test timeout
-  timeout: 360 * 1000,  // 6 minutes
+  timeout: 120 * 1000,  // 2 minutes
 
   expect: {
-    timeout: 90000,  // Timeout for expect assertions (90 seconds)
+    timeout: 60000,  // Timeout for expect assertions (60 seconds)
   },
 
   // Define projects for UI and API testing

@@ -15,6 +15,7 @@ export const HOME_PAGE_CONSTANTS = {
         POLESTAR_3: 3,
         POLESTAR_4: 4
     },
+    HOME_PAGE_LOAD_TIMEOUT: 60000,
 
 
 };
