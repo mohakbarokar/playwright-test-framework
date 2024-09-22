@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { URL } from '../../constants/urls';
-import { TEST_USER_DETAILS } from "../../constants/user-details";
+import { TEST_USER_DETAILS } from '../../constants/api-user-details';
 import { API_CONSTANTS } from "../../constants/api-constants";
 
 /**

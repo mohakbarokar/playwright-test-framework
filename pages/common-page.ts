@@ -1,4 +1,3 @@
-// common-page.ts
 import { Page, expect, request } from '@playwright/test';
 
 /**
@@ -13,6 +12,16 @@ export class CommonPage {
      */
     constructor(page: Page) {
         this.page = page;
+    }
+
+    /**
+     * Verifies the title of the page.
+     * @param expectedTitle The expected title of the page.
+     */
+    async verifyPageTitle(expectedTitle: string) {
+        const title = await this.page.title();
+        console.log(`The page title is: ${title}`);
+        expect(title, `Expected title : "${expectedTitle}" :: Found title : "${title}"`).toBe(expectedTitle);
     }
 
     /**
@@ -122,7 +131,7 @@ export class CommonPage {
                         timeout: timeout,
                     });
 
-                    expect(response.status(), `Video ${i + 1} returned status : ${response.status}`).toBe(200);
+                    expect(response.status(), `Video ${i + 1} returned status : ${response.status()}`).toBe(200);
                     console.log(`Video ${i + 1} is a valid .mp4 and returned status 200.`);
                 } catch (error) {
                     console.error(`Error fetching video ${i + 1}:`, error);
@@ -131,5 +140,30 @@ export class CommonPage {
                 console.warn(`Video ${i + 1} does not have a valid .mp4 URL, skipping.`);
             }
         }
+    }
+
+    /**
+     * Waits for a page to fully load by checking the visibility of a key element.
+     * @param elementLocator The locator for the element that should be visible when the page is fully loaded.
+     * @param pageTitle The expected title of the page to verify after it loads. (Optional)
+     * @param timeout The maximum time to wait for the element to become visible (default: 10 seconds). (Optional)
+     */
+    async waitForPageToLoad(elementLocator: string, pageTitle?: string, timeout: number = 10000) {
+        console.log(`Waiting for the page to fully load with element: ${elementLocator}`);
+        
+        // Wait for the page's network activity to idle before checking for the element
+        // await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('networkidle', { timeout });
+
+        // Wait for the key element to be visible
+        await this.page.waitForSelector(elementLocator, { state: 'visible', timeout });
+
+        // Verify the page title if provided
+        if (pageTitle) {
+            const title = await this.page.title();
+            console.log(`The page title is: ${title}`);
+            expect(title, `Expected title : "${pageTitle}" :: Found title : "${title}"`).toBe(pageTitle);
+        }
+        console.log('Page is fully loaded.');
     }
 }

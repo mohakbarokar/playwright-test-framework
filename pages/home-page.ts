@@ -39,18 +39,6 @@ export class HomePage {
     }
 
     /**
-     * Verifies the title of the home page.
-     * 
-     * This method retrieves the current title of the page and compares it to the expected title defined
-     * in HOME_PAGE_CONSTANTS. If they do not match, an assertion error will be thrown.
-     */
-    async verifyHomePageTitle() {
-        const title = await this.page.title();
-        console.log(`The page title is: ${title}`);
-        expect(title, `Title of Homepage found as ${title}`).toBe(HOME_PAGE_CONSTANTS.HOME_PAGE_TITLE);
-    }
-
-    /**
      * Clicks on an option by its title.
      * 
      * This method dynamically constructs a selector based on the provided title and clicks the corresponding
@@ -60,7 +48,7 @@ export class HomePage {
      */
     async clickOnOptionByTitle(title: string) {
         console.log(`Clicking on title: ${title}`);
-        await this.page.locator(`a[title="${title}"]`).click();
+        await this.page.getByTitle(title).click();
     }
 
     /**
@@ -83,24 +71,24 @@ export class HomePage {
             expect(dialogTitle, `Verifying Welcome Dialog title`).toBe(HOME_PAGE_CONSTANTS.EULA_DIALOG_BOX_TITLE);
 
             // Verify dialog text
-            const dialogText = await this.page.textContent(homePageLocators.EULA_DIALOG_BOX_TEXT);
+            const dialogText = await this.page.textContent(homePageLocators.EULA_DIALOG_BOX_TEXT_ID);
             expect(dialogText, `Verifying policy text`).toBe(HOME_PAGE_CONSTANTS.EULA_DIALOG_BOX_POLICY);
 
             // Verify accept button text
-            const acceptBtnText = await this.page.textContent(homePageLocators.EULA_DIALOG_BOX_ACCEPT_BTN);
+            const acceptBtnText = await this.page.textContent(homePageLocators.EULA_DIALOG_BOX_ACCEPT_BTN_ID);
             expect(acceptBtnText, `Verifying accept button text`).toBe(HOME_PAGE_CONSTANTS.EULA_DIALOG_ACCEPT_BTN);
 
             // Verify reject button text
-            const rejectBtnText = await this.page.textContent(homePageLocators.EULA_DIALOG_BOX_REJECT_BTN);
+            const rejectBtnText = await this.page.textContent(homePageLocators.EULA_DIALOG_BOX_REJECT_BTN_ID);
             expect(rejectBtnText, `Verifying reject button text`).toBe(HOME_PAGE_CONSTANTS.EULA_DIALOG_REJECT_BTN);
 
             // Click accept or reject based on the parameter
             if (accept) {
                 console.log(`Clicking on EULA Dialog accept all button`);
-                await this.page.click(homePageLocators.EULA_DIALOG_BOX_ACCEPT_BTN);
+                await this.page.click(homePageLocators.EULA_DIALOG_BOX_ACCEPT_BTN_ID);
             } else {
                 console.log(`Clicking on EULA Dialog reject all button`);
-                await this.page.click(homePageLocators.EULA_DIALOG_BOX_REJECT_BTN);
+                await this.page.click(homePageLocators.EULA_DIALOG_BOX_REJECT_BTN_ID);
             }
         }
     }
@@ -118,7 +106,7 @@ export class HomePage {
         const modelNames = HOME_PAGE_CONSTANTS.CURRENT_DISPLAYED_MODEL_NAMES;
 
         // Get the elements matching the XPath for current displayed models
-        const displayedModels = await this.page.$$(homePageLocators.CURRENT_DISPLAYED_MODELS_ON_HOME_PAGE);
+        const displayedModels = await this.page.$$(homePageLocators.CURRENT_DISPLAYED_MODELS_ON_HOME_PAGE_XPATH);
 
         // Extract the text content from the displayed elements
         const displayedModelTexts = await Promise.all(
@@ -142,7 +130,7 @@ export class HomePage {
      * await carPage.verifyPolestarLink(2); // Verifies the Polestar 2 link
      */
     async verifyPolestarDiscoverButton(number: number) {
-        const locator = homePageLocators.GET_POLESTAR_DISCOVER_BUTTON(number);
+        const locator = homePageLocators.GET_POLESTAR_DISCOVER_BUTTON_ROLE(number);
         const polestarLink = this.page.locator(locator);
 
         // Check if the link is visible

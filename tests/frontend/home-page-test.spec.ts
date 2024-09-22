@@ -20,8 +20,8 @@ test.describe('Home Page Verification', () => {
       await homePage.navigateToHomePage();
     });
 
-    await test.step('Verify Page Title', async () => {
-      await homePage.verifyHomePageTitle();
+    await test.step('Verify Home Page Title', async () => {
+      await commonPage.verifyPageTitle(HOME_PAGE_CONSTANTS.HOME_PAGE_TITLE);
     });
 
     await test.step('Check EULA Dialog', async () => {
