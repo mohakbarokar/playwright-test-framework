@@ -1,4 +1,5 @@
 import { Page, expect, request } from '@playwright/test';
+import { genericLocators } from '../locators/generic-locators';
 
 /**
  * CommonPage class provides utility methods for all pages interactions and verifications.
@@ -150,7 +151,7 @@ export class CommonPage {
      */
     async waitForPageToLoad(elementLocator: string, pageTitle?: string, timeout: number = 10000) {
         console.log(`Waiting for the page to fully load with element: ${elementLocator}`);
-        
+
         // Wait for the page's network activity to idle before checking for the element
         // await this.page.waitForLoadState('networkidle');
         await this.page.waitForLoadState('networkidle', { timeout });
@@ -165,5 +166,38 @@ export class CommonPage {
             expect(title, `Expected title : "${pageTitle}" :: Found title : "${title}"`).toBe(pageTitle);
         }
         console.log('Page is fully loaded.');
+    }
+
+    /**
+    * Clicks on a navigation button with the specified text.
+    *
+    * @param {string} buttonText - The text of the button to be clicked.
+    * @throws {Error} If the button is not visible or cannot be clicked.
+    *
+    * @example
+    * await homePage.clickOnNavigationButton('Profile');
+    */
+    async clickOnNavigationButton(buttonText: string) {
+        // Get the dynamic locator using button text
+        const locator = this.page.locator(genericLocators.BUTTON_WITH_TEXT(buttonText));
+
+        // Wait for the button to be visible
+        await expect(locator, `Checking if ${buttonText} button is visible in Navigation menu`).toBeVisible();
+
+        // Click the button
+        await locator.click();
+
+        console.log(`Clicked on ${buttonText} button in Navigation menu`);
+    }
+
+    /**
+     * Hovers over a navigation button identified by its text.
+     * 
+     * @param {string} buttonText - The text of the button to hover over.
+     */
+    async hoverOnNavigationButton(buttonText: string) {
+        // Get the dynamic locator using button text
+        const locator = this.page.locator(genericLocators.BUTTON_WITH_TEXT(buttonText));
+        await locator.hover();
     }
 }
