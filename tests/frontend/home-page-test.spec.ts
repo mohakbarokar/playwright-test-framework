@@ -48,14 +48,7 @@ test.describe('Home Page Verification', () => {
     });
 
     await test.step('Verify if there are any broken images on Home Page', async () => {
-      const brokenImages = await commonPage.checkForBrokenImages();
-
-      if (brokenImages.length > 0) {
-        console.error('Broken images found:', brokenImages);
-        expect(brokenImages.length, `Broken Images Found on Page : ${brokenImages.length}`).toBe(0);
-      } else {
-        console.log('No broken images found.');
-      }
+      await commonPage.checkAndVerifyBrokenImages();
     });
 
     await test.step('Verify if there are videos working on Home Page', async () => {

@@ -22,32 +22,33 @@ export class ProfilePage {
     }
 
     /**
-     * Retrieves the current number of cars owned from the profile page
-     * and verifies it against the number of tiles shown.
-     * @returns {Promise<number>} The number of cars owned.
+     * Retrieves the current number of cars owned by the user by extracting the number from 
+     * the "Dina bilar" button and comparing it with the count of car tiles displayed on the page.
+     * 
+     * @returns {Promise<number>} - The total number of cars found.
      */
     async getCurrentNumberOfCars(): Promise<number> {
         // Locate the "Dina bilar" button and wait for it to be visible
         const carsButtonLocator = this.page.locator(profilePageLocators.YOUR_CARS_LABEL_XPATH);
         await carsButtonLocator.waitFor();
 
-        // Get the button text and extract the number of cars
+        // Extract the button text (e.g., "Dina bilar (3)") and extract the number in parentheses
         const buttonText = await carsButtonLocator.innerText();
         const numberOfCars = parseInt(buttonText.match(/\((\d+)\)/)?.[1] || '0', 10);
-
         console.log(`Extracted number of cars from button text: ${numberOfCars}`);
 
-        // Wait for the car tiles to be present
+        // Locate the car tiles and wait for at least one tile to be present
         const carTilesLocator = this.page.locator(profilePageLocators.YOUR_CARS_TILE_XPATH);
-        await carTilesLocator.waitFor();
+        await carTilesLocator.first().waitFor();
 
-        // Get the count of car tiles
+        // Get the actual count of car tiles displayed on the page
         const carCount = await carTilesLocator.count();
-        console.log(`Number of cars owned from tiles: ${carCount}`);
+        console.log(`Number of car tiles found: ${carCount}`);
 
-        // Verify that the number from the button matches the number of tiles found
-        expect(carCount, `Verifying if Number of Cars and Tiles shown are same : ${numberOfCars}`).toBe(numberOfCars);
+        // Verify that the number extracted from the button matches the count of car tiles
+        expect(carCount, `Verifying the number of cars (${numberOfCars}) matches the number of tiles shown (${carCount})`).toBe(numberOfCars);
 
+        // Return the number of cars as extracted from the "Dina bilar" button
         return numberOfCars;
     }
 

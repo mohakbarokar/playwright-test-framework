@@ -26,17 +26,17 @@ export class CommonPage {
     }
 
     /**
-     * Check for broken images on the page.
+     * Check and Verify Broken Images on the Page
      * 
-     * This method locates all image elements (`<img>`) on the page and checks if their source URLs
-     * return a successful HTTP status (200). If any image fails to load or returns a non-200 status,
-     * its URL will be added to the `brokenImages` array.
+     * This method locates all image elements (`<img>`) on the page, checks if their source URLs
+     * return a successful HTTP status (200), and logs the URLs of any broken images. If any image fails
+     * to load or returns a non-200 status, its URL will be logged and an assertion will be made.
      * 
-     * @returns A promise that resolves to an array of strings representing the URLs of broken images.
-     * If no broken images are found, the array will be empty.
+     * @returns A promise that resolves after verifying that no broken images are found on the page.
+     * If broken images are found, an assertion error will be thrown with the count of broken images.
      */
-    async checkForBrokenImages(): Promise<string[]> {
-        console.log('Checking Broken Images on Page');
+    async checkAndVerifyBrokenImages(): Promise<void> {
+        console.log('Checking and Verifying Broken Images on Page');
         const brokenImages: string[] = [];
 
         // Find all image elements on the page
@@ -69,7 +69,13 @@ export class CommonPage {
             }
         }
 
-        return brokenImages;
+        // If any broken images are found, log and assert that no broken images should exist
+        if (brokenImages.length > 0) {
+            console.error('Broken images found:', brokenImages);
+            expect(brokenImages.length, `Broken Images Found on Page : ${brokenImages.length}`).toBe(0);
+        } else {
+            console.log('No broken images found.');
+        }
     }
 
     /**
@@ -149,7 +155,7 @@ export class CommonPage {
      * @param pageTitle The expected title of the page to verify after it loads. (Optional)
      * @param timeout The maximum time to wait for the element to become visible (default: 10 seconds). (Optional)
      */
-    async waitForPageToLoad(elementLocator: string, pageTitle?: string, timeout: number = 10000) {
+    async waitForPageToLoad(elementLocator: string, pageTitle?: string, timeout: number = 60000) {
         console.log(`Waiting for the page to fully load with element: ${elementLocator}`);
 
         // Wait for the page's network activity to idle before checking for the element

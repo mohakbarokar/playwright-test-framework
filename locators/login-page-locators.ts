@@ -13,6 +13,3 @@ export const loginPageLocators = {
     PWD_ERROR_MESSAGE_TEXT_XPATH: `//div[@id='password-field-line']/following-sibling::div`,
     LOGIN_ERROR_SECTION_ID: '#errorSection',
 };
-
-// 'role=link[name="Polestar"]',
-// page.getByRole('link', { name: 'Polestar' });
