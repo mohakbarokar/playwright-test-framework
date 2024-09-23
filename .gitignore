@@ -7,3 +7,5 @@ tests-examples/
 allure-report/
 allure-results/
 html-report/
+load-test-result.html
+load-test-summary.json
