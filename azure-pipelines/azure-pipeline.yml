@@ -23,12 +23,35 @@ steps:
   displayName: 'Install Playwright Browsers'
 
 - script: |
+    sudo apt-get update
+    sudo apt-get install -y k6
+  displayName: 'Install K6'
+
+- script: |
     npm run test:all
   displayName: 'Run All Tests'
+
+- script: |
+    npm run load:test
+  displayName: 'Run K6 Load Tests'
 
 - task: PublishTestResults@2
   inputs:
     testResultsFormat: 'JUnit'
-    testResultsFiles: 'test-results/*.xml'  # Adjusted to reflect the source level
+    testResultsFiles: 'test-results/*.xml'
     failIfNoResults: true
   displayName: 'Publish Test Results'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: 'load-test-result.html'
+    ArtifactName: 'LoadTestResults'
+    publishLocation: 'Container'
+  displayName: 'Publish K6 Load Test HTML Report'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: 'load-test-summary.json'
+    ArtifactName: 'LoadTestSummary'
+    publishLocation: 'Container'
+  displayName: 'Publish K6 Load Test JSON Summary'
