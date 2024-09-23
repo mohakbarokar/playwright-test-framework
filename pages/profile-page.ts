@@ -80,15 +80,15 @@ export class ProfilePage {
      */
     async cleanupCars(): Promise<void> {
         // Locate all three dots options and wait for them to be visible
-        console.log('Trying to delete cars displayed in configurations.')
+        console.log('Trying to delete cars displayed in configurations.');
         let threeDotsOptions = this.page.locator(profilePageLocators.THREE_DOTS_OPTION_BTN_XPATH);
         let count = await threeDotsOptions.count();
 
         console.log(`Found ${count} cars to delete.`);
 
-        for (let i = 0; i < count; i++) {
-            // Click on the three dots option for the current car
-            await threeDotsOptions.nth(i).click();
+        while (count > 0) {
+            // Click on the three dots option for the first car
+            await threeDotsOptions.first().click();
 
             // Wait for the delete option to be visible and click it
             const deleteCarOption = this.page.locator(profilePageLocators.DELETE_CAR_OPTION_BTN_XPATH);
@@ -102,16 +102,14 @@ export class ProfilePage {
             const deleteButton = this.page.locator(genericLocators.BUTTON_WITH_TEXT(profilePageLocators.DELETE_BTN_TEXT));
             await deleteButton.click();
 
-            // Optional: Wait for a short duration to ensure the deletion is processed
-            await this.page.waitForTimeout(PROFILE_PAGE_CONSTANTS.CAR_CLEANUP_TIMEOUT);
-
             // Refresh the page and wait for it to load
             await this.page.reload();
-            await this.commonPage.waitForPageToLoad(genericLocators.ELEMENT_WITH_TEXT(profilePageLocators.PROFILE_NAME_ELEMENT_TYPE, PORTAL_USER_DETAILS.correct.name), PROFILE_PAGE_CONSTANTS.PROFILE_PAGE_TITLE, PROFILE_PAGE_CONSTANTS.PROFILE_PAGE_LOAD_TIMEOUT);
+            await this.commonPage.waitForPageToLoad(genericLocators.ELEMENT_WITH_TEXT(profilePageLocators.PROFILE_NAME_ELEMENT_TYPE, PORTAL_USER_DETAILS.correct.name), PROFILE_PAGE_CONSTANTS.PROFILE_PAGE_TITLE, PROFILE_PAGE_CONSTANTS.CAR_CLEANUP_TIMEOUT);
 
             // Re-locate the three dots options in case the list has changed
             threeDotsOptions = this.page.locator(profilePageLocators.THREE_DOTS_OPTION_BTN_XPATH);
             count = await threeDotsOptions.count();
+            console.log(`Found ${count} cars to delete after reload.`);
         }
 
         console.log('Delete Action Performed.');
