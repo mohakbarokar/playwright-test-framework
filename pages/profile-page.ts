@@ -1,6 +1,4 @@
 import { Page, expect } from '@playwright/test';
-import { loginPageLocators } from '../locators/login-page-locators';
-import { LOGIN_PAGE_CONSTANTS } from '../constants/login-page-constants';
 import { PORTAL_USER_DETAILS } from '../constants/portal-user-details';
 import { CommonPage } from './common-page';
 import { genericLocators } from '../locators/generic-locators';
@@ -110,7 +108,7 @@ export class ProfilePage {
             // Refresh the page and wait for it to load
             await this.page.reload();
             await this.commonPage.waitForPageToLoad(genericLocators.ELEMENT_WITH_TEXT(profilePageLocators.PROFILE_NAME_ELEMENT_TYPE, PORTAL_USER_DETAILS.correct.name), PROFILE_PAGE_CONSTANTS.PROFILE_PAGE_TITLE, PROFILE_PAGE_CONSTANTS.PROFILE_PAGE_LOAD_TIMEOUT);
-            
+
             // Re-locate the three dots options in case the list has changed
             threeDotsOptions = this.page.locator(profilePageLocators.THREE_DOTS_OPTION_BTN_XPATH);
             count = await threeDotsOptions.count();

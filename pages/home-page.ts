@@ -13,7 +13,7 @@
 
 import { Page, expect } from '@playwright/test';
 import { homePageLocators } from '../locators/home-page-locators'; // Importing locators for home page elements
-import { URL } from '../constants/urls'; // Importing constants for URLs
+import { URL } from '../constants/urls'; // Importing constants for urls
 import { HOME_PAGE_CONSTANTS } from '../constants/home-page-constants'; // Importing constants for home page verification
 import { genericLocators } from '../locators/generic-locators';
 

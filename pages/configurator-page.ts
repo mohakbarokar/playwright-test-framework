@@ -1,11 +1,6 @@
 import { Page, expect } from '@playwright/test';
-import { loginPageLocators } from '../locators/login-page-locators';
-import { LOGIN_PAGE_CONSTANTS } from '../constants/login-page-constants';
-import { PORTAL_USER_DETAILS } from '../constants/portal-user-details';
 import { CommonPage } from './common-page';
 import { genericLocators } from '../locators/generic-locators';
-import { PROFILE_PAGE_CONSTANTS } from '../constants/profile-page-constants';
-import { profilePageLocators } from '../locators/profile-page-locators';
 import { configuratorPageLocators } from '../locators/configurator-page-locators';
 import { CONFIGURATOR_PAGE_CONSTANTS } from '../constants/configurator-page-constants';
 
