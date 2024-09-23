@@ -162,7 +162,7 @@ export class CommonPage {
         try {
             await this.page.waitForLoadState('networkidle', { timeout });
         } catch (error) {
-            console.warn(`Failed to wait for networkidle state: ${error.message}. Continuing to wait for the element...`);
+            console.warn(`Failed to wait for networkidle state: ${error.message}. Continuing the execution...`);
         }
 
         // Wait for the key element to be visible
