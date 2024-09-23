@@ -15,7 +15,7 @@
     "report:generate": "npx allure generate allure-results --clean",
     "report:open": "npx allure open",
     "report:allure": "npm run report:generate && npm run report:open",
-    "load:test": "k6 run tests/load-test/restapi-load-test.js"
+    "load:test": "k6 run tests/load-test/restapi-load-test.js" 
   },
   "keywords": [],
   "author": "",

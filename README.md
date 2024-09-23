@@ -16,10 +16,18 @@ npx playwright install
 npm install -g allure-commandline
 ```
 
+### Install K6 for Load Testing
+To perform load testing, install K6:
+```bash
+brew install k6  # macOS
+choco install k6 # Windows
+```
+For other platforms, follow the installation instructions on the [K6 official website](https://k6.io/docs/getting-started/installation/).
+
 ## Framework Structure
 
 ### Directory Overview
-- **/tests/**: Contains all test cases, organized into `frontend` and `backend` folders for better management.
+- **/tests/**: Contains all test cases, organized into `frontend`, `backend`, and `load-test` folders for better management.
 - **/pages/**: Implements the Page Object Model (POM) where each web page corresponds to a class file containing methods for operations and verifications.
 - **/constants/**: Stores framework/application-related constants in JSON format (e.g., URLs, user details).
 - **/locators/**: Contains locators for specific pages in JSON format. Generic locators are stored separately in `generic-locators.ts`.
@@ -27,6 +35,7 @@ npm install -g allure-commandline
 - **/test-results/**: Contains execution results in JSON and XML formats, aiding HTML and Allure report generation (generated post-execution).
 - **/allure-report/**: Stores execution results, screenshots, and videos for Allure reports (generated after running the report command).
 - **/allure-results/**: Keeps historical execution results in JSON and text formats.
+- **/load-test/**: Contains scripts for load testing using K6.
 - **package.json**: Lists all dependencies and custom execution commands.
 
 ## Script Explanation
@@ -79,6 +88,15 @@ Execute tests using custom commands defined in `package.json`:
   ```bash
   npm run test:all:parallel
   ```
+
+### K6 Load Testing
+To run the K6 load test script, use the following command:
+```bash
+npm run load:test
+```
+This command runs the K6 load test script located at `tests/load-test/restapi-load-test.js`.
+
+Report in HTML and json is geneerated in root directory as `load-test-result.html` and `load-test-summary.json` respectively.
 
 ## Test Reporting
 
