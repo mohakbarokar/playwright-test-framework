@@ -37,7 +37,7 @@ export class ConfiguratorPage {
         await this.commonPage.clickOnNavigationButton(configuratorPageLocators.SELECT_LONG_RANGE_BTN_TEXT);
 
         // Wait for a short duration to ensure the UI updates
-        await this.page.waitForTimeout(500);
+        await this.page.waitForTimeout(CONFIGURATOR_PAGE_CONSTANTS.CONFIGURATION_UI_UPDATE_TIMEOUT);
 
         // Select the "Performance package" checkbox
         const performancePackageCheckbox = this.page.locator(configuratorPageLocators.PERFORMANCE_PACKAGE_CHECKBOX_XPATH);
