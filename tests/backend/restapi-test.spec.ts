@@ -10,34 +10,38 @@ test.describe('API Testing with Playwright', () => {
     let userId: number; // Variable to store the user ID
 
     /**
-     * Pre requisite Test case to cleanup data if previous execution failed and residue data is left in system.
+     * Pre requisite Test case to cleanup data if previous execution failed and residue data is left in system or user mails are used.
      * GET /public/v2/users & DELETE
      */
-    test.beforeAll(`GET & DELETE /public/v2/users?email=${TEST_USER_DETAILS.primary.email} should delete user if existed`, async ({ request }) => {
-        // Check if a user with the specified email already exists
-        const getUserResponse = await request.get(`${URL.API_BASE_URL}/public/v2/users?email=${encodeURIComponent(TEST_USER_DETAILS.primary.email)}`, {
-            headers: API_CONSTANTS.HEADERS,
-        });
+    test.beforeAll(`GET & DELETE /public/v2/users?email should delete user emails if existed`, async ({ request }) => {
+        const emails = [TEST_USER_DETAILS.primary.email, TEST_USER_DETAILS.updated.email];
 
-        // Log the response details
-        console.log(`GET Response Status: ${getUserResponse.status()}`);
-        const responseBody = await getUserResponse.json();
-
-        // If user exists, delete the user
-        if (responseBody && responseBody.length > 0) {
-            userId = responseBody[0].id; // Get the user Id
-            console.log(`User found with ID: ${userId}, deleting...`);
-
-            const deleteResponse = await request.delete(`${URL.API_BASE_URL}/public/v2/users/${userId}`, {
+        for (const email of emails) {
+            // Check if a user with the specified email already exists
+            const getUserResponse = await request.get(`${URL.API_BASE_URL}/public/v2/users?email=${encodeURIComponent(email)}`, {
                 headers: API_CONSTANTS.HEADERS,
             });
 
-            console.log(`DELETE Response Status: ${deleteResponse.status()}`);
+            // Log the response details
+            console.log(`GET Response for ${email} - Status: ${getUserResponse.status()}`);
+            const responseBody = await getUserResponse.json();
 
-            // Expect a 204 No Content response
-            expect(deleteResponse.status(), `Deletion Successful and status 204`).toBe(204);
-        } else {
-            console.log('No existing user found with the specified email.');
+            // If user exists, delete the user
+            if (responseBody && responseBody.length > 0) {
+                const userId = responseBody[0].id; // Get the user Id
+                console.log(`User found with ID: ${userId}, deleting...`);
+
+                const deleteResponse = await request.delete(`${URL.API_BASE_URL}/public/v2/users/${userId}`, {
+                    headers: API_CONSTANTS.HEADERS,
+                });
+
+                console.log(`DELETE Response for ${email} - Status: ${deleteResponse.status()}`);
+
+                // Expect a 204 No Content response
+                expect(deleteResponse.status(), `Deletion of ${email} successful with status 204`).toBe(204);
+            } else {
+                console.log(`No existing user found with email: ${email}.`);
+            }
         }
     });
 
