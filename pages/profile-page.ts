@@ -102,6 +102,9 @@ export class ProfilePage {
             const deleteButton = this.page.locator(genericLocators.BUTTON_WITH_TEXT(profilePageLocators.DELETE_BTN_TEXT));
             await deleteButton.click();
 
+            // Wait for a short duration to ensure the UI updates
+            await this.page.waitForTimeout(PROFILE_PAGE_CONSTANTS.CAR_DELETE_TIMEOUT);
+
             // Refresh the page and wait for it to load
             await this.page.reload();
             await this.commonPage.waitForPageToLoad(genericLocators.ELEMENT_WITH_TEXT(profilePageLocators.PROFILE_NAME_ELEMENT_TYPE, PORTAL_USER_DETAILS.correct.name), PROFILE_PAGE_CONSTANTS.PROFILE_PAGE_TITLE, PROFILE_PAGE_CONSTANTS.CAR_CLEANUP_TIMEOUT);
